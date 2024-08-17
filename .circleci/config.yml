@@ -31,13 +31,20 @@ jobs:
       - checkout
       - run:
           name: Install Nginx
-          command: sudo apt-get update && sudo apt-get install -y nginx
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y nginx
       - run:
           name: Deploy index.html
           command: |
             sudo mv index.html /var/www/html/index.html
             sudo service nginx start
-          # You can add additional deployment steps here, such as copying files to a remote server.
+            # Ensure the web server is running and accessible
+      - run:
+          name: Verify Deployment
+          command: |
+            curl -I http://localhost | grep "200 OK"
+            # You can add additional verification steps here, such as checking the deployment
 
 workflows:
   version: 2
